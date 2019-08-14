@@ -1,5 +1,5 @@
-const { share, createSubject } = require("pfrp/pstream");
-const { mockTimeSource } = require("pfrp/cyclebridge");
+const { share, createSubject } = require("pstream");
+const { mockTimeSource } = require("pstream/cyclebridge");
 const { makeNoseAngleSimulator } = require("./simulators/engagement");
 const makeEngagementDetector = require("./apps/makeEngagementDetector.wppl");
 

@@ -14,7 +14,7 @@ function toXStream(stream) {
   });
 }
 
-const { share } = require("./pstream");
+const { share } = require("./");
 
 function fromXStream(in$) {
   return share(cb => {

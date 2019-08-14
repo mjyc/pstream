@@ -7,7 +7,7 @@ const {
   sdebounce,
   share,
   createSubject
-} = require("../pstream");
+} = require("../");
 
 // many tests are using on createSubject
 describe("createSubject", () => {

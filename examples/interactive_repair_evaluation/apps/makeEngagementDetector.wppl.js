@@ -1,4 +1,4 @@
-const { sscan, sdistinctUntilChanged } = require("pfrp/pstream");
+const { sscan, sdistinctUntilChanged } = require("pstream/pstream");
 
 module.exports = function({
   stamp0 = 0,

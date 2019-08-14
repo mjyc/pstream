@@ -1,6 +1,6 @@
-const { smap, sscan, stake, sskip } = require("pfrp/pstream");
-const { mockTimeSource } = require("pfrp/cyclebridge");
-const dists = require("pfrp/dists");
+const { smap, sscan, stake, sskip } = require("pstream");
+const { mockTimeSource } = require("pstream/cyclebridge");
+const dists = require("pstream/dists");
 
 const makeNoseAngleSimulator = function({
   Time = mockTimeSource(),

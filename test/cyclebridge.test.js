@@ -1,5 +1,5 @@
 const xs = require("xstream").default;
-const { toXStream, fromXStream } = require("../src/cyclebridge");
+const { toXStream, fromXStream } = require("../cyclebridge");
 
 test("toXStream", async done => {
   const stream = cb => {

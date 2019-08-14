@@ -1,4 +1,4 @@
-const { smap } = require("../../src/wppl/pstream.wppl.js");
+const { smap } = require("../../wppl/pstream.wppl.js");
 
 test("smap", async () => {
   const input = [{ stamp: 0, value: 0 }, { stamp: 1, value: 1 }];

@@ -1,0 +1,17 @@
+{
+  "name": "pstream",
+  "description": "A probabilistic reactive stream library for JavaScript",
+  "version": "0.0.0",
+  "main": "src/pstream.js",
+  "scripts": {
+    "test": "jest --testPathIgnorePatterns /examples/ /node_modules/"
+  },
+  "dependencies": {
+    "@cycle/time": "0.19.0",
+    "webppl": "0.9.15",
+    "xstream": "11.11.0"
+  },
+  "devDependencies": {
+    "jest": "^24.8.0"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "private": true,
+  "scripts": {
+    "simulate": "node simulate"
+  },
+  "dependencies": {
+    "@cycle-robot-drivers/run": "1.0.22",
+    "pfrp": "file:../../"
+  },
+  "devDependencies": {}
+}

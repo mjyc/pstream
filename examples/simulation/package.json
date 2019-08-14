@@ -1,12 +1,11 @@
 {
   "private": true,
   "scripts": {
-    "presimulate": "rm -rf ./src/apps; cp -r ../apps ./src/",
-    "simulate": "node ./src/simulate"
+    "presim": "rm -rf ./src/apps; cp -r ../apps ./src/",
+    "sim": "node ./src/simulate"
   },
-  "dependencies": {
-    "@cycle-robot-drivers/run": "1.0.22",
+  "dependencies": {},
+  "devDependencies": {
     "pstream": "file:../../"
-  },
-  "devDependencies": {}
+  }
 }

@@ -1,7 +1,7 @@
 {
   "private": true,
   "scripts": {
-    "presimulate": "ln -sf ../../apps ./src/",
+    "presimulate": "rm -rf ./src/apps; cp -r ../apps ./src/",
     "simulate": "node ./src/simulate"
   },
   "dependencies": {

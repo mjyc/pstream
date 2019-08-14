@@ -1,4 +1,4 @@
-const { sscan, sdistinctUntilChanged } = require("pstream/pstream");
+const { sscan, sdistinctUntilChanged } = require("pstream");
 
 module.exports = function({
   stamp0 = 0,

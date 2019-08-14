@@ -1,0 +1,13 @@
+{
+  "private": true,
+  "scripts": {
+    "demo": "node ./repair.js ../apps/makeEngagementDetector.wppl.js"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@babel/plugin-transform-arrow-functions": "7.2.0",
+    "@babel/plugin-transform-destructuring": "7.5.0",
+    "@babel/plugin-transform-parameters": "7.4.4",
+    "pstream": "file:../../"
+  }
+}

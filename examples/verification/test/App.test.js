@@ -8,11 +8,11 @@ const {
 } = require("pfrp/pstream");
 const { mockTimeSource } = require("pfrp/cyclebridge");
 const dists = require("pfrp/dists");
-const ltl = require("ltljs");
+const { evalT } = require("ltljs");
 
 const App = require("../src/App");
 
-test("on", done => {
+test("always not empty string", done => {
   const Time = mockTimeSource();
   const n = 1000;
   const period = 100;
@@ -85,7 +85,7 @@ test("on", done => {
     }
   };
   appOutput.SpeechSynthesisAction.goal(g => {
-    spec = ltl.evalT(spec, () => g !== "");
+    spec = evalT(spec, () => g !== "");
     expect(!!spec).toBeTruthy;
   });
 

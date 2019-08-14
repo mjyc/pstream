@@ -1,4 +1,4 @@
-const { smap, sscan, stake, sskip } = require("pfrp/streams");
+const { smap, sscan, stake, sskip } = require("pfrp/pstream");
 const { mockTimeSource } = require("pfrp/cyclebridge");
 const dists = require("pfrp/dists");
 

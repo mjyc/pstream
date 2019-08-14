@@ -9,7 +9,7 @@
     "@cycle-robot-drivers/run": "1.0.22",
     "@cycle/time": "^0.19.0",
     "pfrp": "file:../../",
-    "ltljs": "file:../../ltljs",
+    "ltljs": "0.0.1",
     "xstream": "11.11.0"
   },
   "devDependencies": {}

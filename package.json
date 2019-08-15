@@ -1,5 +1,5 @@
 {
-  "name": "pstream",
+  "name": "pstreamjs",
   "description": "A probabilistic reactive stream library for JavaScript",
   "version": "0.0.0",
   "main": "pstream.js",

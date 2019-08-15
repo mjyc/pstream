@@ -5,9 +5,9 @@ const {
   sscan,
   stake,
   sskip
-} = require("pfrp/pstream");
-const { mockTimeSource } = require("pfrp/cyclebridge");
-const dists = require("pfrp/dists");
+} = require("pstreamjs");
+const { mockTimeSource } = require("pstreamjs/cyclebridge");
+const dists = require("pstreamjs/dists");
 const { evalT } = require("ltljs");
 
 const App = require("../src/App");

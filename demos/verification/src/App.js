@@ -1,4 +1,4 @@
-const { smap, sfilter, sscan, sskip } = require("pfrp/pstream");
+const { smap, sfilter, sscan, sskip } = require("pstreamjs");
 
 const engagedTimeout = 1000;
 

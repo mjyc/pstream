@@ -1,5 +1,5 @@
 const { runTabletRobotFaceApp } = require("@cycle-robot-drivers/run");
-const { fromXStream, toXStream } = require("pfrp/cyclebridge");
+const { fromXStream, toXStream } = require("pstreamjs/cyclebridge");
 
 const App = require("./App");
 

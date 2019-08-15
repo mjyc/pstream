@@ -23,7 +23,7 @@ function filter(predicate, stream) {
 }
 
 // https://github.com/rpominov/basic-streams/blob/master/packages/scan/index.ts
-// modified to "share" the return stream
+// modified to "share" the return "shared" stream
 function scan(reducer, seed, stream) {
   return share(cb => {
     let acc = seed;

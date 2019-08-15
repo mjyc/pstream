@@ -1,4 +1,4 @@
-# pstream
+# pstreamjs
 
 A probabilistic reactive stream library for JavaScript
 

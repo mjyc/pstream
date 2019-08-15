@@ -12,7 +12,7 @@ const appCode = fs
   .match(/module\.exports = .*/s)[0]
   .replace("module.exports = ", "const makeApp = ");
 
-const streamsFilename = "./node_modules/pstream/wppl/pstream.wppl.js";
+const streamsFilename = "./node_modules/pstreamjs/wppl/pstream.wppl.js";
 const streamsCode = fs
   .readFileSync(streamsFilename, "utf8")
   .replace(/const .+ = require\(\".+\"\);/s, "")

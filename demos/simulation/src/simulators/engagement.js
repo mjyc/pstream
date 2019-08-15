@@ -1,6 +1,6 @@
-const { smap, sscan, stake, sskip } = require("pstream");
-const { mockTimeSource } = require("pstream/cyclebridge");
-const dists = require("pstream/dists");
+const { smap, sscan, stake, sskip } = require("pstreamjs");
+const { mockTimeSource } = require("pstreamjs/cyclebridge");
+const dists = require("pstreamjs/dists");
 
 const makeNoseAngleSimulator = function({
   Time = mockTimeSource(),

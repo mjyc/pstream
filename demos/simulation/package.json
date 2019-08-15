@@ -6,6 +6,6 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "pstream": "file:../../"
+    "pstreamjs": "file:../../"
   }
 }

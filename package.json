@@ -4,7 +4,7 @@
   "version": "0.0.1",
   "main": "pstream.js",
   "scripts": {
-    "test": "jest --testPathIgnorePatterns /examples/ /node_modules/"
+    "test": "jest --testPathIgnorePatterns /demos/ /node_modules/"
   },
   "dependencies": {
     "@cycle/time": "0.19.0",

@@ -1,6 +1,7 @@
 // Tests new or modified code only; code copied from rpominov's basic-streams
 //   without modifications are not tested.
 const {
+  sscan,
   smerge,
   scombineLatest,
   spairwise,
@@ -39,6 +40,31 @@ describe("createSubject", () => {
     const disposer = subject.stream(listener);
     disposer(); // unsubscribe
     expect(subject.next).toEqual(null);
+  });
+});
+
+describe("scan", () => {
+  test("returns a shared output stream", done => {
+    const subject = createSubject();
+    let i = 0;
+    const scanned = sscan((acc, x) => acc + x, 0, subject.stream);
+
+    const expected1 = [0, 1, 3, 6, 10];
+    // only the first callback function gets called with the "seed" value
+    const expected2 = [1, 3, 6, 10];
+    scanned(x1 => {
+      expect(x1).toBe(expected1.shift());
+      if (expected1.length === 0 && expected2.length) done();
+    });
+    scanned(x2 => {
+      expect(x2).toBe(expected2.shift());
+      if (expected1.length === 0 && expected2.length) done();
+    });
+
+    subject.next(1);
+    subject.next(2);
+    subject.next(3);
+    subject.next(4);
   });
 });
 

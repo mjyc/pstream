@@ -179,6 +179,8 @@ function share(stream) {
   const callbacks = [];
   let activeCallbacks = 0;
   let sourceSubscription = null;
+  let numCallbackCalled = 0;
+  let initialValue;
 
   function startSource() {
     const currentSubscription = {};
@@ -202,6 +204,8 @@ function share(stream) {
   }
 
   function callCallbacks(x) {
+    if (numCallbackCalled === 0) initialValue = x;
+    numCallbackCalled += 1;
     for (let i = 0; i < callbacks.length; i++) {
       const callback = callbacks[i];
       if (callback !== null) {
@@ -215,6 +219,9 @@ function share(stream) {
     activeCallbacks++;
     if (activeCallbacks === 1) {
       startSource();
+    } else if (numCallbackCalled === 1) {
+      // only remembers the initial value
+      cb(initialValue);
     }
     return () => {
       if (callbacks[cbIndex] !== null) {

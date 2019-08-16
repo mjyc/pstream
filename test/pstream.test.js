@@ -4,6 +4,7 @@ const {
   sscan,
   smerge,
   scombineLatest,
+  sstartWith,
   spairwise,
   sdebounce,
   share,
@@ -43,20 +44,73 @@ describe("createSubject", () => {
   });
 });
 
-describe("scan", () => {
-  test("returns a shared output stream", done => {
+// only testing the modified part
+describe("share", () => {
+  test("returns _hotStream", () => {
     const subject = createSubject();
-    let i = 0;
-    const scanned = sscan((acc, x) => acc + x, 0, subject.stream);
+    const shared = share(subject.stream);
+    expect(shared.name).toBe("_hotStream");
+  });
 
-    const expected1 = [0, 1, 3, 6, 10];
-    // only the first callback function gets called with the "seed" value
-    const expected2 = [1, 3, 6, 10];
-    scanned(x1 => {
+  test("remembers the initial value", done => {
+    const subject = createSubject();
+    const stream = share(sstartWith(0, subject.stream));
+
+    const expected1 = [0, 1, 2, 3, 4];
+    const expected2 = [0, 1, 2, 3, 4];
+    stream(x1 => {
       expect(x1).toBe(expected1.shift());
       if (expected1.length === 0 && expected2.length) done();
     });
-    scanned(x2 => {
+    stream(x2 => {
+      expect(x2).toBe(expected2.shift());
+      if (expected1.length === 0 && expected2.length) done();
+    });
+
+    subject.next(1);
+    subject.next(2);
+    subject.next(3);
+    subject.next(4);
+  });
+
+  test("does not remember the non-initial values", done => {
+    const subject = createSubject();
+    const stream = share(sstartWith(0, subject.stream));
+
+    const expected1 = [0, 1, 2, 3, 4];
+    const expected2 = [2, 3, 4];
+
+    stream(x1 => {
+      expect(x1).toBe(expected1.shift());
+      if (expected1.length === 0 && expected2.length) done();
+    });
+
+    subject.next(1);
+
+    stream(x2 => {
+      expect(x2).toBe(expected2.shift());
+      if (expected1.length === 0 && expected2.length) done();
+    });
+
+    subject.next(2);
+    subject.next(3);
+    subject.next(4);
+  });
+});
+
+describe("scan", () => {
+  test("returns a shared output stream, i.e., does not call the reducer function on every callback calls", done => {
+    const subject = createSubject();
+    const reducer = (acc, x) => acc + x;
+    const stream = sscan(reducer, 0, subject.stream);
+
+    const expected1 = [0, 1, 3, 6, 10];
+    const expected2 = [0, 1, 3, 6, 10];
+    stream(x1 => {
+      expect(x1).toBe(expected1.shift());
+      if (expected1.length === 0 && expected2.length) done();
+    });
+    stream(x2 => {
       expect(x2).toBe(expected2.shift());
       if (expected1.length === 0 && expected2.length) done();
     });
@@ -151,15 +205,6 @@ describe("pairwise", () => {
     disposer();
     expect(subject.next).toEqual(null); // unsubscribed
     done();
-  });
-});
-
-// only testing the modified part
-describe("share", () => {
-  test("returns _hotStream", () => {
-    const subject = createSubject();
-    const shared = share(subject.stream);
-    expect(shared.name).toBe("_hotStream");
   });
 });
 

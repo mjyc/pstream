@@ -40,8 +40,6 @@ function mockTimeSource(...args) {
       Time.assertEqual(toXStream(actual), toXStream(expected), comparator),
     periodic: period => fromXStream(Time.periodic(period)),
     run: Time.run,
-    createOperator: Time.createOperator,
-    _scheduler: Time._scheduler,
     _time: Time._time
   };
 }

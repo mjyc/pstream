@@ -61,14 +61,21 @@ var sdebounce = function(fn, stream) {
         return {
           last: { stamp, value },
           arr:
-            stamp - prev.last.stamp > fn(value)
-              ? prev.arr.concat({ stamp: stamp + fn(value), value })
+            stamp - prev.last.stamp > fn(prev.last.value)
+              ? prev.arr.concat({
+                  stamp: prev.last.stamp + fn(prev.last.value),
+                  value: prev.last.value
+                })
               : prev.arr
         };
       },
-      { last: stream[0], arr: [stream[0]] },
+      { last: stream[0], arr: [] },
       stream.slice(1).reverse()
-    ).arr;
+    ).arr.concat({
+      stamp:
+        stream[stream.length - 1].stamp + fn(stream[stream.length - 1].value),
+      value: stream[stream.length - 1].value
+    });
   }
 };
 

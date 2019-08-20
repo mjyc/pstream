@@ -57,13 +57,18 @@ var sdebounce = function(fn, stream) {
     return stream;
   } else {
     return reduce(
-      ({ stamp, value }, prev) =>
-        stamp - prev.stamp > fn(value)
-          ? prev.concat({ stamp: stamp, value: value })
-          : prev,
-      [stream[0]],
+      ({ stamp, value }, prev) => {
+        return {
+          last: { stamp, value },
+          arr:
+            stamp - prev.last.stamp > fn(value)
+              ? prev.arr.concat({ stamp: stamp + fn(value), value })
+              : prev.arr
+        };
+      },
+      { last: stream[0], arr: [stream[0]] },
       stream.slice(1).reverse()
-    );
+    ).arr;
   }
 };
 

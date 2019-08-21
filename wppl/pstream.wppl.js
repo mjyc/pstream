@@ -56,26 +56,25 @@ var sdebounce = function(fn, stream) {
   if (stream.length < 2) {
     return stream;
   } else {
-    return reduce(
-      ({ stamp, value }, prev) => {
+    const { candidate, arr } = reduce(
+      ({ stamp, value }, { candidate, arr }) => {
         return {
-          last: { stamp, value },
+          candidate: {
+            stamp: stamp + fn(value),
+            value: value
+          },
           arr:
-            stamp - prev.last.stamp > fn(prev.last.value)
-              ? prev.arr.concat({
-                  stamp: prev.last.stamp + fn(prev.last.value),
-                  value: prev.last.value
-                })
-              : prev.arr
+            candidate === null
+              ? []
+              : candidate.stamp < stamp
+              ? arr.concat(candidate)
+              : arr
         };
       },
-      { last: stream[0], arr: [] },
-      stream.slice(1).reverse()
-    ).arr.concat({
-      stamp:
-        stream[stream.length - 1].stamp + fn(stream[stream.length - 1].value),
-      value: stream[stream.length - 1].value
-    });
+      { candidate: null, arr: null },
+      stream.reverse()
+    );
+    return arr.concat(candidate);
   }
 };
 

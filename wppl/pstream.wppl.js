@@ -1,4 +1,4 @@
-const { map, reduce } = require("./header.wppl");
+const { map, filter, reduce, sort } = require("./header.wppl");
 
 var smap = function(fn, stream) {
   return map(
@@ -20,6 +20,10 @@ var smapTo = function(x, stream) {
   );
 };
 
+var sfilter = function(fn, stream) {
+  return filter(({ stamp, value }) => !!fn(value), stream);
+};
+
 var sscan = function(reducer, seed, stream) {
   return reduce(
     ({ stamp, value }, prev) => {
@@ -31,6 +35,11 @@ var sscan = function(reducer, seed, stream) {
     [{ stamp: 0, value: seed }],
     stream.reverse()
   );
+};
+
+var smerge = function() {
+  const streams = arguments;
+  return sort([].concat.apply([], streams), (a, b) => a < b, x => x.stamp);
 };
 
 var sstartWith = function(x, stream) {

@@ -692,7 +692,9 @@ var kde = function(marginal, width) {
 };
 
 module.exports = {
-  map: map,
-  filter: filter,
-  reduce: reduce
+  map,
+  filter,
+  reduce,
+  sort,
+  sortOn
 };

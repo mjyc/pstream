@@ -39,7 +39,7 @@ var sscan = function(reducer, seed, stream) {
 
 var smerge = function() {
   const streams = arguments;
-  return sort([].concat.apply([], streams), (a, b) => a > b, x => x.stamp);
+  return sort([].concat.apply([], streams), (a, b) => a < b, x => x.stamp);
 };
 
 var sstartWith = function(x, stream) {

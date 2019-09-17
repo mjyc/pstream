@@ -33,7 +33,7 @@ var sscan = function(reducer, seed, stream) {
       });
     },
     [{ stamp: 0, value: seed }],
-    stream.reverse()
+    stream.slice(0).reverse()
   );
 };
 
@@ -81,7 +81,7 @@ var sdebounce = function(fn, stream) {
         };
       },
       { candidate: null, arr: null },
-      stream.reverse()
+      stream.slice(0).reverse()
     );
     return arr.concat(candidate);
   }

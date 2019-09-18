@@ -1,4 +1,8 @@
-const { smap, sdebounce } = require("../../wppl/pstream.wppl.js");
+const {
+  smap,
+  sdebounce,
+  sdistinctUntilChanged
+} = require("../../wppl/pstream.wppl.js");
 
 test("smap", async () => {
   const input = [{ stamp: 0, value: 0 }, { stamp: 1, value: 1 }];
@@ -57,4 +61,41 @@ test("sdebounce", async () => {
     { stamp: 95, value: 9 }
   ];
   expect(output2).toEqual(expected2);
+});
+
+describe("sdistinctUntilChanged", () => {
+  test("removing duplicates", () => {
+    const expected = [
+      { stamp: 0, value: 0 },
+      { stamp: 20, value: 1 },
+      { stamp: 40, value: 2 },
+      { stamp: 60, value: 3 },
+      { stamp: 80, value: 4 }
+    ];
+    const input = [
+      { stamp: 0, value: 0 },
+      { stamp: 10, value: 0 },
+      { stamp: 20, value: 1 },
+      { stamp: 30, value: 1 },
+      { stamp: 40, value: 2 },
+      { stamp: 50, value: 2 },
+      { stamp: 60, value: 3 },
+      { stamp: 70, value: 3 },
+      { stamp: 80, value: 4 },
+      { stamp: 90, value: 4 }
+    ];
+    const actual = sdistinctUntilChanged((a, b) => a === b, input);
+    expect(actual).toEqual(expected);
+  });
+
+  test("using input with two same stamps", async () => {
+    const expected = [{ stamp: 0, value: 0 }, { stamp: 0, value: 1 }];
+    const input = [
+      { stamp: 0, value: 0 },
+      { stamp: 0, value: 1 },
+      { stamp: 10, value: 1 }
+    ];
+    const actual = sdistinctUntilChanged((a, b) => a === b, input);
+    expect(actual).toEqual(expected);
+  });
 });

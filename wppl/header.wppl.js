@@ -693,6 +693,7 @@ var kde = function(marginal, width) {
 
 module.exports = {
   map,
+  mapIndexed,
   filter,
   reduce,
   sort,

@@ -1,8 +1,8 @@
 {
   "private": true,
   "scripts": {
-    "presim": "rm -rf ./src/apps; cp -r ../apps ./src/",
-    "sim": "node ./src/simulate"
+    "predemo": "npm install; rm -rf ./apps; cp -r ../apps ./",
+    "demo": "node ./simulate"
   },
   "dependencies": {},
   "devDependencies": {

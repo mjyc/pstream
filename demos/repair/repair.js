@@ -16,7 +16,8 @@ const streamsFilename = "./node_modules/pstreamjs/wppl/pstream.wppl.js";
 const streamsCode = fs
   .readFileSync(streamsFilename, "utf8")
   .replace(/const .+ = require\(\".+\"\);/s, "")
-  .replace(/module.exports = {.+};/s, "");
+  .replace(/module.exports = {.+};/s, "")
+  .replace(/module.exports = .+;/s, "");
 
 const modelCode = `
 const model = function() {
@@ -56,8 +57,8 @@ try {
     plugins: [
       "@babel/plugin-transform-arrow-functions",
       "@babel/plugin-transform-destructuring",
-      "@babel/plugin-transform-parameters"
-    ]
+      "@babel/plugin-transform-parameters",
+    ],
   }).code;
 } catch (err) {
   console.error("Possibly invalid wppl input code", code);

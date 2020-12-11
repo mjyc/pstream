@@ -1,17 +1,23 @@
 const {
-  smap,
-  sdebounce,
-  sdistinctUntilChanged
+  map,
+  debounce,
+  distinctUntilChanged,
 } = require("../../wppl/pstream.wppl.js");
 
-test("smap", async () => {
-  const input = [{ stamp: 0, value: 0 }, { stamp: 1, value: 1 }];
-  const output = smap(x => x + 1, input);
-  const expected = [{ stamp: 0, value: 1 }, { stamp: 1, value: 2 }];
+test("map", async () => {
+  const input = [
+    { stamp: 0, value: 0 },
+    { stamp: 1, value: 1 },
+  ];
+  const output = map((x) => x + 1, input);
+  const expected = [
+    { stamp: 0, value: 1 },
+    { stamp: 1, value: 2 },
+  ];
   expect(output).toEqual(expected);
 });
 
-test("sdebounce", async () => {
+test("debounce", async () => {
   const input = [
     { stamp: 0, value: 0 },
     { stamp: 10, value: 1 },
@@ -22,16 +28,16 @@ test("sdebounce", async () => {
     { stamp: 60, value: 6 },
     { stamp: 70, value: 7 },
     { stamp: 80, value: 8 },
-    { stamp: 90, value: 9 }
+    { stamp: 90, value: 9 },
   ];
-  const output = sdebounce(x => x * 2, input);
+  const output = debounce((x) => x * 2, input);
   const expected = [
     { stamp: 0, value: 0 },
     { stamp: 12, value: 1 },
     { stamp: 24, value: 2 },
     { stamp: 36, value: 3 },
     { stamp: 48, value: 4 },
-    { stamp: 108, value: 9 }
+    { stamp: 108, value: 9 },
   ];
   expect(output).toEqual(expected);
 
@@ -45,9 +51,9 @@ test("sdebounce", async () => {
     { stamp: 60, value: 6 },
     { stamp: 70, value: 7 },
     { stamp: 80, value: 8 },
-    { stamp: 90, value: 9 }
+    { stamp: 90, value: 9 },
   ];
-  const output2 = sdebounce(x => 5, input2);
+  const output2 = debounce((x) => 5, input2);
   const expected2 = [
     { stamp: 5, value: 0 },
     { stamp: 15, value: 1 },
@@ -58,19 +64,19 @@ test("sdebounce", async () => {
     { stamp: 65, value: 6 },
     { stamp: 75, value: 7 },
     { stamp: 85, value: 8 },
-    { stamp: 95, value: 9 }
+    { stamp: 95, value: 9 },
   ];
   expect(output2).toEqual(expected2);
 });
 
-describe("sdistinctUntilChanged", () => {
+describe("distinctUntilChanged", () => {
   test("removing duplicates", () => {
     const expected = [
       { stamp: 0, value: 0 },
       { stamp: 20, value: 1 },
       { stamp: 40, value: 2 },
       { stamp: 60, value: 3 },
-      { stamp: 80, value: 4 }
+      { stamp: 80, value: 4 },
     ];
     const input = [
       { stamp: 0, value: 0 },
@@ -82,20 +88,23 @@ describe("sdistinctUntilChanged", () => {
       { stamp: 60, value: 3 },
       { stamp: 70, value: 3 },
       { stamp: 80, value: 4 },
-      { stamp: 90, value: 4 }
+      { stamp: 90, value: 4 },
     ];
-    const actual = sdistinctUntilChanged((a, b) => a === b, input);
+    const actual = distinctUntilChanged((a, b) => a === b, input);
     expect(actual).toEqual(expected);
   });
 
   test("using input with two same stamps", async () => {
-    const expected = [{ stamp: 0, value: 0 }, { stamp: 0, value: 1 }];
+    const expected = [
+      { stamp: 0, value: 0 },
+      { stamp: 0, value: 1 },
+    ];
     const input = [
       { stamp: 0, value: 0 },
       { stamp: 0, value: 1 },
-      { stamp: 10, value: 1 }
+      { stamp: 10, value: 1 },
     ];
-    const actual = sdistinctUntilChanged((a, b) => a === b, input);
+    const actual = distinctUntilChanged((a, b) => a === b, input);
     expect(actual).toEqual(expected);
   });
 });

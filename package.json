@@ -2,7 +2,7 @@
   "name": "pstreamjs",
   "description": "A probabilistic reactive stream library for JavaScript",
   "version": "0.0.8",
-  "main": "pstream.js",
+  "main": "index.js",
   "scripts": {
     "test": "jest --testPathIgnorePatterns /demos/ /node_modules/"
   },

@@ -7,17 +7,17 @@
 
 // https://github.com/rpominov/basic-streams/blob/master/packages/map/index.ts
 function map(fn, stream) {
-  return cb => stream(payload => cb(fn(payload)));
+  return (cb) => stream((payload) => cb(fn(payload)));
 }
 
 function mapTo(value, stream) {
-  return cb => stream(() => cb(value));
+  return (cb) => stream(() => cb(value));
 }
 
 // https://github.com/rpominov/basic-streams/blob/master/packages/filter/index.ts
 function filter(predicate, stream) {
-  return cb =>
-    stream(payload => {
+  return (cb) =>
+    stream((payload) => {
       if (predicate(payload)) cb(payload);
     });
 }
@@ -25,10 +25,10 @@ function filter(predicate, stream) {
 // https://github.com/rpominov/basic-streams/blob/master/packages/scan/index.ts
 // modified to "share" the return "shared" stream
 function scan(reducer, seed, stream) {
-  return share(cb => {
+  return share((cb) => {
     let acc = seed;
     cb(acc);
-    return stream(next => {
+    return stream((next) => {
       acc = reducer(acc, next);
       cb(acc);
     });
@@ -38,20 +38,22 @@ function scan(reducer, seed, stream) {
 // https://github.com/rpominov/basic-streams/blob/master/packages/chain/index.ts
 // modified and renamed to "merge" to be consistent with rxjs
 function merge(...streams) {
-  return cb => {
+  return (cb) => {
     const disposers = [];
-    streams.forEach(stream => disposers.push(stream(payload => cb(payload))));
-    return () => disposers.forEach(fn => fn());
+    streams.forEach((stream) =>
+      disposers.push(stream((payload) => cb(payload)))
+    );
+    return () => disposers.forEach((fn) => fn());
   };
 }
 
 function combineLatest(...streams) {
-  return cb => {
+  return (cb) => {
     const vals = {};
     const disposers = [];
     streams.forEach((stream, i) => {
       return disposers.push(
-        stream(payload => {
+        stream((payload) => {
           vals[i] = payload;
           if (Object.keys(vals).length === streams.length) {
             cb(Object.values(vals));
@@ -59,14 +61,14 @@ function combineLatest(...streams) {
         })
       );
     });
-    return () => disposers.forEach(fn => fn());
+    return () => disposers.forEach((fn) => fn());
   };
 }
 
 // https://github.com/rpominov/basic-streams/blob/master/packages/prepend/index.ts
 // renamed to "prepend" to be consistent with rxjs
 function startWith(x, stream) {
-  return cb => {
+  return (cb) => {
     cb(x);
     return stream(cb);
   };
@@ -75,9 +77,9 @@ function startWith(x, stream) {
 // https://github.com/rpominov/basic-streams/blob/master/packages/skip-duplicates/index.ts
 // renamed to "distinctUntilChanged" to be consistent with rxjs
 function distinctUntilChanged(comp, stream) {
-  return cb => {
+  return (cb) => {
     let latest = null;
-    return stream(x => {
+    return stream((x) => {
       if (!latest || !comp(latest.value, x)) {
         latest = { value: x };
         cb(x);
@@ -88,8 +90,8 @@ function distinctUntilChanged(comp, stream) {
 
 function pairwise(stream) {
   let isFirst = true;
-  return cb =>
-    stream(payload => {
+  return (cb) =>
+    stream((payload) => {
       if (isFirst) {
         prev = payload;
         isFirst = false;
@@ -102,7 +104,7 @@ function pairwise(stream) {
 
 // https://github.com/rpominov/basic-streams/blob/master/packages/take/index.ts
 function take(n, stream) {
-  return cb => {
+  return (cb) => {
     let state = { cb, count: 0 };
 
     function stop() {
@@ -144,9 +146,9 @@ function take(n, stream) {
 
 // https://github.com/rpominov/basic-streams/blob/master/packages/skip/index.ts
 function skip(n, stream) {
-  return cb => {
+  return (cb) => {
     let count = 0;
-    return stream(x => {
+    return stream((x) => {
       count++;
       if (count > n) {
         cb(x);
@@ -156,9 +158,9 @@ function skip(n, stream) {
 }
 
 function debounce(fn, stream) {
-  return cb => {
+  return (cb) => {
     let timeout;
-    return stream(payload => {
+    return stream((payload) => {
       if (timeout) clearTimeout(timeout);
       timeout = setTimeout(() => cb(payload), fn(payload));
     });
@@ -214,7 +216,7 @@ function share(stream) {
     }
   }
 
-  const _hotStream = cb => {
+  const _hotStream = (cb) => {
     const cbIndex = callbacks.push(cb) - 1;
     activeCallbacks++;
     if (activeCallbacks === 1) {
@@ -239,7 +241,7 @@ function share(stream) {
 // https://github.com/rpominov/basic-streams/blob/master/packages/of-many/index.ts
 // simplified and renamed to "fromIter" to be consistent with rxjs
 function fromIter(iter) {
-  return cb => {
+  return (cb) => {
     // https://github.com/staltz/callbag-from-iter/blob/master/index.js
     const iterator =
       typeof Symbol !== "undefined" && iter[Symbol.iterator]
@@ -258,7 +260,7 @@ function fromIter(iter) {
 // modified to follow basic-streams protocol
 function interval(period) {
   let i = 0;
-  return cb => {
+  return (cb) => {
     const id = setInterval(() => {
       cb(i++);
     }, period);
@@ -271,45 +273,31 @@ function interval(period) {
 function createSubject() {
   const subject = {
     next: null,
-    stream: cb => {
-      subject.next = x => cb(x);
+    stream: (cb) => {
+      subject.next = (x) => cb(x);
       return () => (subject.next = null);
-    }
+    },
   };
   return subject;
 }
 
 module.exports = {
-  default: {
-    map,
-    mapTo,
-    filter,
-    merge,
-    combineLatest,
-    scan,
-    startWith,
-    distinctUntilChanged,
-    pairwise,
-    take,
-    skip,
-    debounce
-  },
-  // extra
+  // IMPORTANT!! make sure to rename to avoid naming conflict in wppl
+  map,
+  mapTo,
+  filter,
+  merge,
+  combineLatest,
+  scan,
+  startWith,
+  distinctUntilChanged,
+  pairwise,
+  take,
+  skip,
+  debounce,
   share,
+  // producers
   fromIter,
   interval,
   createSubject,
-  // to avoid naming conflict in wppl
-  smap: map,
-  smapTo: mapTo,
-  sfilter: filter,
-  sscan: scan,
-  smerge: merge,
-  scombineLatest: combineLatest,
-  sstartWith: startWith,
-  sdistinctUntilChanged: distinctUntilChanged,
-  spairwise: pairwise,
-  stake: take,
-  sskip: skip,
-  sdebounce: debounce
 };

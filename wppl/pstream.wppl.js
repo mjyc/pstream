@@ -1,35 +1,35 @@
 const { map, filter, reduce, sort } = require("./header.wppl");
 
-var smap = function(fn, stream) {
+var p$map = function(fn, stream) {
   return map(
     ({ stamp, value }) => ({
       stamp: stamp,
-      value: fn(value)
+      value: fn(value),
     }),
     stream
   );
 };
 
-var smapTo = function(x, stream) {
+var p$mapTo = function(x, stream) {
   return map(
     ({ stamp, value }) => ({
       stamp: stamp,
-      value: x
+      value: x,
     }),
     stream
   );
 };
 
-var sfilter = function(fn, stream) {
+var p$filter = function(fn, stream) {
   return filter(({ stamp, value }) => !!fn(value), stream);
 };
 
-var sscan = function(reducer, seed, stream) {
+var p$scan = function(reducer, seed, stream) {
   return reduce(
     ({ stamp, value }, prev) => {
       return prev.concat({
         stamp: stamp,
-        value: reducer(prev[prev.length - 1].value, value)
+        value: reducer(prev[prev.length - 1].value, value),
       });
     },
     [{ stamp: 0, value: seed }],
@@ -37,16 +37,20 @@ var sscan = function(reducer, seed, stream) {
   );
 };
 
-var smerge = function() {
+var p$merge = function() {
   const streams = arguments;
-  return sort([].concat.apply([], streams), (a, b) => a < b, x => x.stamp);
+  return sort(
+    [].concat.apply([], streams),
+    (a, b) => a < b,
+    (x) => x.stamp
+  );
 };
 
-var sstartWith = function(x, stream) {
+var p$startWith = function(x, stream) {
   return [{ stamp: 0, value: x }].concat(stream);
 };
 
-var sdistinctUntilChanged = function(compare, stream) {
+var p$distinctUntilChanged = function(compare, stream) {
   if (stream.length < 2) {
     return stream;
   } else {
@@ -61,7 +65,7 @@ var sdistinctUntilChanged = function(compare, stream) {
   }
 };
 
-var sdebounce = function(fn, stream) {
+var p$debounce = function(fn, stream) {
   if (stream.length < 2) {
     return stream;
   } else {
@@ -70,14 +74,14 @@ var sdebounce = function(fn, stream) {
         return {
           candidate: {
             stamp: stamp + fn(value),
-            value: value
+            value: value,
           },
           arr:
             candidate === null
               ? []
               : candidate.stamp < stamp
               ? arr.concat(candidate)
-              : arr
+              : arr,
         };
       },
       { candidate: null, arr: null },
@@ -88,9 +92,9 @@ var sdebounce = function(fn, stream) {
 };
 
 module.exports = {
-  smap,
-  sscan,
-  sstartWith,
-  sdistinctUntilChanged,
-  sdebounce
+  map: p$map,
+  scan: p$scan,
+  startWith: p$startWith,
+  distinctUntilChanged: p$distinctUntilChanged,
+  debounce: p$debounce,
 };

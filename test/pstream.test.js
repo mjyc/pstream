@@ -1,14 +1,14 @@
 // Tests new or modified code only; code copied from rpominov's basic-streams
 //   without modifications are not tested.
 const {
-  sscan,
-  smerge,
-  scombineLatest,
-  sstartWith,
-  spairwise,
-  sdebounce,
+  scan,
+  merge,
+  combineLatest,
+  startWith,
+  pairwise,
+  debounce,
   share,
-  createSubject
+  createSubject,
 } = require("../");
 
 // many tests are using on createSubject
@@ -22,10 +22,10 @@ describe("createSubject", () => {
     expect(subject.next.name).not.toEqual("listener");
   });
 
-  test("publishes events via .next(evt)", done => {
+  test("publishes events via .next(evt)", (done) => {
     const subject = createSubject();
     const expected = [1, 2, 3, 4];
-    subject.stream(output => {
+    subject.stream((output) => {
       expect(output).toEqual(expected.shift());
       if (expected.length === 0) done();
     });
@@ -52,17 +52,17 @@ describe("share", () => {
     expect(shared.name).toBe("_hotStream");
   });
 
-  test("remembers the initial value", done => {
+  test("remembers the initial value", (done) => {
     const subject = createSubject();
-    const stream = share(sstartWith(0, subject.stream));
+    const stream = share(startWith(0, subject.stream));
 
     const expected1 = [0, 1, 2, 3, 4];
     const expected2 = [0, 1, 2, 3, 4];
-    stream(x1 => {
+    stream((x1) => {
       expect(x1).toBe(expected1.shift());
       if (expected1.length === 0 && expected2.length) done();
     });
-    stream(x2 => {
+    stream((x2) => {
       expect(x2).toBe(expected2.shift());
       if (expected1.length === 0 && expected2.length) done();
     });
@@ -73,21 +73,21 @@ describe("share", () => {
     subject.next(4);
   });
 
-  test("does not remember the non-initial values", done => {
+  test("does not remember the non-initial values", (done) => {
     const subject = createSubject();
-    const stream = share(sstartWith(0, subject.stream));
+    const stream = share(startWith(0, subject.stream));
 
     const expected1 = [0, 1, 2, 3, 4];
     const expected2 = [2, 3, 4];
 
-    stream(x1 => {
+    stream((x1) => {
       expect(x1).toBe(expected1.shift());
       if (expected1.length === 0 && expected2.length) done();
     });
 
     subject.next(1);
 
-    stream(x2 => {
+    stream((x2) => {
       expect(x2).toBe(expected2.shift());
       if (expected1.length === 0 && expected2.length) done();
     });
@@ -99,18 +99,18 @@ describe("share", () => {
 });
 
 describe("scan", () => {
-  test("returns a shared output stream, i.e., does not call the reducer function on every callback calls", done => {
+  test("returns a shared output stream, i.e., does not call the reducer function on every callback calls", (done) => {
     const subject = createSubject();
     const reducer = (acc, x) => acc + x;
-    const stream = sscan(reducer, 0, subject.stream);
+    const stream = scan(reducer, 0, subject.stream);
 
     const expected1 = [0, 1, 3, 6, 10];
     const expected2 = [0, 1, 3, 6, 10];
-    stream(x1 => {
+    stream((x1) => {
       expect(x1).toBe(expected1.shift());
       if (expected1.length === 0 && expected2.length) done();
     });
-    stream(x2 => {
+    stream((x2) => {
       expect(x2).toBe(expected2.shift());
       if (expected1.length === 0 && expected2.length) done();
     });
@@ -123,12 +123,15 @@ describe("scan", () => {
 });
 
 describe("merge", () => {
-  test("merges", done => {
+  test("merges", (done) => {
     const subject1 = createSubject();
     const subject2 = createSubject();
     let i = 0;
     const expected = [1, 2, 3, 4];
-    smerge(subject1.stream, subject2.stream)(output => {
+    merge(
+      subject1.stream,
+      subject2.stream
+    )((output) => {
       expect(output).toEqual(expected.shift());
       if (expected.length === 0) done();
     });
@@ -138,10 +141,13 @@ describe("merge", () => {
     subject2.next(4);
   });
 
-  test("preserves a disposer", done => {
+  test("preserves a disposer", (done) => {
     const subject1 = createSubject();
     const subject2 = createSubject();
-    const disposer = smerge(subject1.stream, subject2.stream)(output => {
+    const disposer = merge(
+      subject1.stream,
+      subject2.stream
+    )((output) => {
       done.fail(`Unexpected output ${JSON.stringify(output)}`);
     });
     disposer();
@@ -152,12 +158,19 @@ describe("merge", () => {
 });
 
 describe("combineLatest", () => {
-  test("combines", done => {
+  test("combines", (done) => {
     const subject1 = createSubject();
     const subject2 = createSubject();
     let i = 0;
-    const expected = [[1, 2], [3, 2], [3, 4]];
-    scombineLatest(subject1.stream, subject2.stream)(output => {
+    const expected = [
+      [1, 2],
+      [3, 2],
+      [3, 4],
+    ];
+    combineLatest(
+      subject1.stream,
+      subject2.stream
+    )((output) => {
       expect(output).toEqual(expected.shift());
       if (expected.length === 0) done();
     });
@@ -167,14 +180,15 @@ describe("combineLatest", () => {
     subject2.next(4);
   });
 
-  test("preserves a disposer", done => {
+  test("preserves a disposer", (done) => {
     const subject1 = createSubject();
     const subject2 = createSubject();
-    const disposer = scombineLatest(subject1.stream, subject2.stream)(
-      output => {
-        done.fail(`Unexpected output ${JSON.stringify(output)}`);
-      }
-    );
+    const disposer = combineLatest(
+      subject1.stream,
+      subject2.stream
+    )((output) => {
+      done.fail(`Unexpected output ${JSON.stringify(output)}`);
+    });
     disposer();
     expect(subject1.next).toEqual(null); // unsubscribed
     expect(subject2.next).toEqual(null); // unsubscribed
@@ -183,11 +197,15 @@ describe("combineLatest", () => {
 });
 
 describe("pairwise", () => {
-  test("pairwises", done => {
+  test("pairwises", (done) => {
     const subject = createSubject();
     let i = 0;
-    const expected = [[1, 2], [2, 3], [3, 4]];
-    spairwise(subject.stream)(output => {
+    const expected = [
+      [1, 2],
+      [2, 3],
+      [3, 4],
+    ];
+    pairwise(subject.stream)((output) => {
       expect(output).toEqual(expected.shift());
       if (expected.length === 0) done();
     });
@@ -197,9 +215,9 @@ describe("pairwise", () => {
     subject.next(4);
   });
 
-  test("preserves a disposer", done => {
+  test("preserves a disposer", (done) => {
     const subject = createSubject();
-    const disposer = spairwise(subject.stream)(output => {
+    const disposer = pairwise(subject.stream)((output) => {
       done.fail(`Unexpected output ${JSON.stringify(output)}`);
     });
     disposer();
@@ -209,9 +227,9 @@ describe("pairwise", () => {
 });
 
 describe("debounce", () => {
-  test("preserves a disposer", done => {
+  test("preserves a disposer", (done) => {
     const subject = createSubject();
-    const disposer = sdebounce(() => {}, subject.stream)(output => {
+    const disposer = debounce(() => {}, subject.stream)((output) => {
       done.fail(`Unexpected output ${JSON.stringify(output)}`);
     });
     disposer();
@@ -219,10 +237,13 @@ describe("debounce", () => {
     done();
   });
 
-  test("debounces", done => {
+  test("debounces", (done) => {
     const subject = createSubject();
     const expected = [0, 1, 2, 3, 4];
-    const disposer = sdebounce(i => i * 2, subject.stream)(output => {
+    const disposer = debounce(
+      (i) => i * 2,
+      subject.stream
+    )((output) => {
       expect(output).toEqual(expected.shift());
     });
     setTimeout(() => subject.next(0), 0);

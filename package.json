@@ -4,7 +4,9 @@
   "version": "0.0.8",
   "main": "index.js",
   "scripts": {
-    "test": "jest --testPathIgnorePatterns /demos/ /node_modules/"
+    "postinstall": "cd ./demos/repair/ && npm install & cd ./demos/simulation/ && npm install & cd ./demos/verification/ && npm install",
+    "test": "jest --testPathIgnorePatterns /./demos/ /node_modules/",
+    "clean": "find . -name 'node_modules' -type d -prune -exec rm -rf '{}' +"
   },
   "dependencies": {
     "@cycle/time": "0.19.0",

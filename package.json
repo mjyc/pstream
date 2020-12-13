@@ -4,7 +4,7 @@
   "version": "0.0.8",
   "main": "index.js",
   "scripts": {
-    "postinstall": "if [ -n \"$DEMO\" ]; then cd ./demos/repair/ && npm install & cd ./demos/simulation/ && npm install & cd ./demos/verification/ && npm install; fi",
+    "postinstall": "if [ -n \"$DEMOS\" ]; then cd ./demos/repair/ && npm install & cd ./demos/simulation/ && npm install & cd ./demos/verification/ && npm install; fi",
     "test": "npx jest --testPathIgnorePatterns ./demos/ /node_modules/",
     "clean": "find . -name 'node_modules' -type d -prune -exec rm -rf '{}' +"
   },

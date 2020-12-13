@@ -1,7 +1,7 @@
 const { share, createSubject } = require("pstreamjs");
 const { mockTimeSource } = require("pstreamjs/cyclebridge");
 const { makeNoseAngleSimulator } = require("./simulators/engagement");
-const makeEngagementDetector = require("./apps/makeEngagementDetector.wppl");
+const makeEngagementDetector = require("./programs/makeEngagementDetector.wppl");
 
 const Time = mockTimeSource();
 const n = 300;
@@ -11,18 +11,18 @@ const HumanSimulator = makeNoseAngleSimulator({
   n: n,
   period: period,
 });
-const App = makeEngagementDetector();
+const Program = makeEngagementDetector();
 
-const appInput = HumanSimulator();
-const appOutput = App(appInput);
+const progInput = HumanSimulator();
+const progOutput = Program(progInput);
 
 let recordedHumanState;
-Time.record(appInput.stateStamped)(
+Time.record(progInput.stateStamped)(
   (recorded) => (recordedHumanState = recorded)
 );
 
 let recordedDetectionOutput;
-Time.record(appOutput)((recorded) => (recordedDetectionOutput = recorded));
+Time.record(progOutput)((recorded) => (recordedDetectionOutput = recorded));
 
 Time.run(() => {
   console.log(recordedHumanState);

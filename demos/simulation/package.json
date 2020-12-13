@@ -1,7 +1,7 @@
 {
   "private": true,
   "scripts": {
-    "predemo": "npm install; rm -rf ./apps; cp -r ../apps ./",
+    "predemo": "npm install; rm -rf ./programs; cp -r ../programs ./",
     "demo": "node ./simulate"
   },
   "dependencies": {},

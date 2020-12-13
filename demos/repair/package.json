@@ -1,7 +1,7 @@
 {
   "private": true,
   "scripts": {
-    "demo": "node ./repair.js ../apps/makeEngagementDetector.wppl.js"
+    "demo": "node ./repair.js ../programs/makeEngagementDetector.wppl.js"
   },
   "dependencies": {},
   "devDependencies": {

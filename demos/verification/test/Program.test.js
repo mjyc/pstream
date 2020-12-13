@@ -3,7 +3,7 @@ const { mockTimeSource } = require("pstreamjs/cyclebridge");
 const dists = require("pstreamjs/dists");
 const { evalT } = require("ltljs");
 
-const App = require("../src/App");
+const Program = require("../src/Program");
 
 test("always not empty string", (done) => {
   const Time = mockTimeSource();
@@ -64,9 +64,9 @@ test("always not empty string", (done) => {
       goal: share(subjects.SpeechSynthesisAction.goal.stream),
     },
   };
-  const appInput = HumanSimulator(humanInputProxy);
-  const appOutput = App(appInput);
-  appOutput.SpeechSynthesisAction.goal(
+  const progInput = HumanSimulator(humanInputProxy);
+  const progOutput = Program(progInput);
+  progOutput.SpeechSynthesisAction.goal(
     subjects.SpeechSynthesisAction.goal.next
   );
 
@@ -77,7 +77,7 @@ test("always not empty string", (done) => {
       value: "emptyString",
     },
   };
-  appOutput.SpeechSynthesisAction.goal((g) => {
+  progOutput.SpeechSynthesisAction.goal((g) => {
     spec = evalT(spec, () => g !== "");
     expect(!!spec).toBeTruthy;
   });

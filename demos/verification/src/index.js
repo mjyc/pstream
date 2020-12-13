@@ -1,20 +1,20 @@
 const { runTabletRobotFaceApp } = require("@cycle-robot-drivers/run");
 const { fromXStream, toXStream } = require("pstreamjs/cyclebridge");
 
-const App = require("./App");
+const Program = require("./Program");
 
-runTabletRobotFaceApp(sources => {
-  const sinks = App({
+runTabletRobotFaceProgram((sources) => {
+  const sinks = Program({
     Time: {
-      _time: Date.now
+      _time: Date.now,
     },
     PoseDetection: {
-      poses: fromXStream(sources.PoseDetection.events("poses"))
-    }
+      poses: fromXStream(sources.PoseDetection.events("poses")),
+    },
   });
   return {
     SpeechSynthesisAction: {
-      goal: toXStream(sinks.SpeechSynthesisAction.goal)
-    }
+      goal: toXStream(sinks.SpeechSynthesisAction.goal),
+    },
   };
 });

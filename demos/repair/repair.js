@@ -1,16 +1,16 @@
 if (process.argv.length < 3) {
-  console.error("usage: node repair.js {appFilename}");
+  console.error("usage: node repair.js {progFilename}");
   exit(1);
 }
 
 const fs = require("fs");
 
 // read files
-const appFilename = process.argv[2];
-const appCode = fs
-  .readFileSync(appFilename, "utf8")
+const progFilename = process.argv[2];
+const progCode = fs
+  .readFileSync(progFilename, "utf8")
   .match(/module\.exports = .*/s)[0]
-  .replace("module.exports = ", "const makeApp = ");
+  .replace("module.exports = ", "const makeProgram = ");
 
 const streamsFilename = "./node_modules/pstreamjs/wppl/pstream.wppl.js";
 const streamsCode = fs
@@ -26,8 +26,8 @@ const model = function() {
     maxNoseAngle: gaussian(0.5, 0.1),
   };
 
-  const App = makeApp(params);
-  const appInput = {
+  const Program = makeProgram(params);
+  const progInput = {
     noseAngleStamped: [
       {stamp: 1, value: {stamp: 1, theta: 0}},
       {stamp: 2, value: {stamp: 2, theta: 0}},
@@ -35,11 +35,11 @@ const model = function() {
       {stamp: 4, value: {stamp: 4, theta: 1}}
     ]
   };
-  const appOutput = App(appInput);
+  const progOutput = Program(progInput);
 
   map((out) => {
     factor(out.value.state === true ? 0 : -Infinity);
-  }, appOutput.slice(1))
+  }, progOutput.slice(1))
 
   return params;
 }
@@ -48,7 +48,7 @@ Infer({method: 'MCMC', samples: 100}, model);
 `;
 
 // transpile
-const inputCode = streamsCode + appCode + modelCode;
+const inputCode = streamsCode + progCode + modelCode;
 
 const babel = require("@babel/core");
 let code;

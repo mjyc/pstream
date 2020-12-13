@@ -3,7 +3,8 @@
   "scripts": {
     "start": "npx parcel index.html --open",
     "build": "npx parcel build index.html",
-    "test": "npx jest"
+    "test": "npx jest",
+    "demo": "npm run test"
   },
   "dependencies": {
     "@cycle-robot-drivers/run": "1.0.22",
